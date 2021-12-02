@@ -77,7 +77,14 @@ Example: to display the built-in command-line help to learn about other availabl
 
     node ./dist/index.js --help
 
-The above command-line switch `--help` will display comprehensive usage guidance.
+The above command-line switch `--help` will display comprehensive usage guidance. Following is a summary of the available command-line parameters:
+
+| flag (full)   | alt. flag (short) | parameter              | example                   | description                                                                                           |     |
+| ------------- | ----------------- | ---------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------- | --- |
+| --origin      | -o                | \<originating borough> | --origin "Manhattan"      | trip originating borough, quotes _optional_ unless borough name contains spaces e.g., "Staten Island" |
+| --destination | -d                | \<destination borough> | --destination "Manhattan" | trip originating borough, quotes _optional_ unless borough name contains spaces e.g., "Staten Island" |
+| --rideHour    | -h                | \<trip-hour>           | --tripHour 17             | hour of the day for the trip using 24-hour clock e.g., 0-23                                           |
+| --rideType    | -t                | \<vehicle-type>        | --tripType YellowCab      | type of vehicle for the trip                                                                          |
 
 ### Running Tests
 
@@ -91,7 +98,7 @@ The above command-line switch `--help` will display comprehensive usage guidance
 | `npm run test`          | run all tests                                                                                                      |
 | `npm run test:debug`    | entry point for the VSCode debugger (assumes the repo is open in [the VSCode IDE](https://code.visualstudio.com/)) |
 | `npm run test:coverage` | run all tests and provide code-coverage report                                                                     |
-| `npm run test:verbose`  | run all tests with maximum verbosity of output                                                                     |
+| `npm run test:verbose`  | run all tests with maximum verbosity of test-runner output                                                         |
 
 ## Contributing
 
