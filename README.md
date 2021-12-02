@@ -40,3 +40,69 @@ Feel free to tackle this problem in a way that demonstrates your expertise of an
 New York City transportation data is [located here](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page). We've included a copy of the [Jan 2018 data](https://cseboulderinterview.blob.core.windows.net/triprecord/tripdata.zip) as well.
 
 Good luck! Please send a link to your solution on Github before the day of your interview so we can review it.
+
+---
+
+## One Solution
+
+This project is a reference implementation in [node.js](https://nodejs.org/)/[TypeScript](https://typescriptlang.org/) of **one possible solution** to the aforementioned sample problem.
+
+### Dependencies
+
+The only dependency (beyond those included in the project/code itself) is that of the `node.js` runtime (and the accompanying `npm` package manager). This code was developed against the node.js runtime v16.8.0. It has not been tested against either earlier or later versions of node.js, and so attempting to run the code against other versions is left as an experiment for the reader ;)
+
+The project itself has a dependency upon the TypeScript language compiler, but this dependency will be resolved by the `npm` package manager during the steps in the [How-To-Run](#How-to-Run) or [Running Tests](#Running-Tests) sections. TypeScript has been specified as a solution-scoped `npm` package dependency so that it will not conflict with any other pre-installed versions of TypeScript on your system.
+
+In the event of targeting a significantly earlier version of node.js, it may be necessary to adjust the TypeScript transpiler targeting to produce an earlier version of Javascript as identified in the [Typescript and JavaScript compatibility](#Typescript-and-JavaScript-compatibility) section of this doc.
+
+### Typescript and JavaScript compatibility
+
+This project is configured to transpile the TypeScript source files into ECMAscript 2020-compatible Javascript. If a different Javascript compatibility target is desired, you may modify the provided `tsconfig.json` file accordingly. See [What is a tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) for more information.
+
+### How-to-Run
+
+1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
+1. clone this repo
+1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
+1. from the root of the repo, run the command `npm start` to transpile the TypeScript to Javascript and start the app
+
+### Command-line Arguments
+
+Running the above-referenced `npm start` command will execute the solution with its _default_ arguments. In addition to defaults, the application also accepts command-line parameters to control its behavior. To pass command-line parameters, perform the following steps:
+
+1. complete the steps in the the [How-to-Run](#How-to-Run) section _at least once_; this will produce the transpiled Javascript files in the `./dist/` folder
+1. invoke the node runtime and pass it the path to the transpiled `./dist/index.js` file, accompanied by any desired command-line parameters
+
+Example: to display the built-in command-line help to learn about other available command-line parameters, run the following command from the root of the repository (assumes node.js is on your system path):
+
+    node ./dist/index.js --help
+
+The above command-line switch `--help` will display comprehensive usage guidance.
+
+### Running Tests
+
+1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
+1. clone this repo
+1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
+1. run one of the following commands as appropriate:
+
+| command                 | intent                                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `npm run test`          | run all tests                                                                                                      |
+| `npm run test:debug`    | entry point for the VSCode debugger (assumes the repo is open in [the VSCode IDE](https://code.visualstudio.com/)) |
+| `npm run test:coverage` | run all tests and provide code-coverage report                                                                     |
+| `npm run test:verbose`  | run all tests with maximum verbosity of output                                                                     |
+
+## Contributing
+
+Contributions are always welcome. To contribute to this project, fork the repository, file a new [issue](https://github.com/sbohlen/Take-Home-Engineering-Challenge/issues) correlated to your proposed contribution, and open a new pull request.
+
+Developers please take note of the several 'convenience' `npm` commands already defined in the `package.json` file intended to improve the developer experience (specifically the several `npm run watch:...` commands provided to accelerate the feedback from the developer build-run-test-debug loop).
+
+## Reporting Issues
+
+Issues, bug reports, suggestions, recommendations, etc. are always welcome. Please file a new [issue](https://github.com/sbohlen/bTake-Home-Engineering-Challenge/issues) describing the problem or suggestion in as much detail as possible. In the case of problems/bugs encountered, reporters are encouraged to include sufficient detail to support reproducing the problem/bug if at all possible.
+
+## License
+
+This project is licensed in its entirety under the MIT License. See [LICENSE](https://github.com/sbohlen/Take-Home-Engineering-Challenge/blob/main/LICENSE) file for details.
