@@ -79,8 +79,8 @@ Example: to display the built-in command-line help to learn about other availabl
 
 The above command-line switch `--help` will display comprehensive usage guidance. Following is a summary of the available command-line parameters:
 
-| flag (full)   | alt. flag (short) | parameter              | example                   | description                                                                                             |     |
-| ------------- | ----------------- | ---------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------- | --- |
+| flag (full)   | alt. flag (short) | parameter              | example                   | description                                                                                             |
+| ------------- | ----------------- | ---------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------- |
 | --origin      | -o                | \<originating borough> | --origin "Manhattan"      | trip _originating_ borough, quotes _optional_ unless borough name contains spaces e.g., "Staten Island" |
 | --destination | -d                | \<destination borough> | --destination "Manhattan" | trip _destination_ borough, quotes _optional_ unless borough name contains spaces e.g., "Staten Island" |
 | --rideHour    | -h                | \<trip-hour>           | --tripHour 17             | hour of the day for the trip using 24-hour clock e.g., 0-23                                             |
