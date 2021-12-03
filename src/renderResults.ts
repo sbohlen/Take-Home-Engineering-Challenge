@@ -1,3 +1,4 @@
+import { RideType } from './RideType';
 import { TripMetrics } from './TripMetrics';
 
 export function renderResults(metrics: TripMetrics) {
@@ -19,9 +20,13 @@ export function renderResults(metrics: TripMetrics) {
     'Minimum Ride Duration',
     `${metrics.durationMinimum.toFixed(0)} minutes`,
   );
-  output.set('Average Ride Cost', `$ ${metrics.costAverage.toFixed(2)}`);
-  output.set('Maximum Ride Cost', `$ ${metrics.costMaximum.toFixed(2)}`);
-  output.set('Minimum Ride Cost', `$ ${metrics.costMinimum.toFixed(2)}`);
+
+  // note: costs are not present in the data for FHVs
+  if (metrics.rideType !== RideType.ForHireVehicle) {
+    output.set('Average Ride Cost', `$ ${metrics.costAverage.toFixed(2)}`);
+    output.set('Maximum Ride Cost', `$ ${metrics.costMaximum.toFixed(2)}`);
+    output.set('Minimum Ride Cost', `$ ${metrics.costMinimum.toFixed(2)}`);
+  }
 
   output.forEach((value, key) => {
     console.log(`${key.padEnd(22, ' ')} |   ${value}`);
