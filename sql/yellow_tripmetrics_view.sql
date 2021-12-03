@@ -34,7 +34,37 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
     and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
 	and tdcosts.PUBoroughID = td.PUBoroughID
 	and tdcosts.DOBoroughID = td.DOBoroughID
-    ) as maximumCost
+    ) as maximumCost,
+
+--calculate the AVG for all trips having the same hour
+(select top 1 AVG(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
+   	from yellow_tripdata tdtimes
+	where
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	and tdtimes.PUBoroughID = td.PUBoroughID
+	and tdtimes.DOBoroughID = td.DOBoroughID
+	order by answer desc
+    ) as averageDuration,
+
+--calculate the MIN for all trips having the same hour
+(select top 1 MIN(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
+   	from yellow_tripdata tdtimes
+	where
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	and tdtimes.PUBoroughID = td.PUBoroughID
+	and tdtimes.DOBoroughID = td.DOBoroughID
+	order by answer desc
+    ) as minimumDuration,
+
+--calculate the MAX for all trips having the same hour
+(select top 1 MAX(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
+   	from yellow_tripdata tdtimes
+	where
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	and tdtimes.PUBoroughID = td.PUBoroughID
+	and tdtimes.DOBoroughID = td.DOBoroughID
+	order by answer desc
+    ) as maximumDuration
 
 from yellow_tripdata td
 
