@@ -7,6 +7,15 @@ import { TripMetricsQueryResult } from './TripMetricsQueryResult';
 
 dotenv.config();
 
+// correlation between rideRype and query source name
+const boroughQuerySourceMap: Map<RideType, string> = new Map<
+  RideType,
+  string
+>();
+boroughQuerySourceMap.set(RideType.GreenCab, 'green_tripmetrics');
+boroughQuerySourceMap.set(RideType.YellowCab, 'yellow_tripmetrics');
+boroughQuerySourceMap.set(RideType.ForHireVehicle, 'fhv_tripmetrics');
+
 function getConnectionConfig() {
   return {
     user: process.env.SQL_USERNAME,
@@ -26,25 +35,13 @@ function buildQuery(
   destination: Boroughs,
   rideHour: number,
   rideType: RideType,
-): any {
-  let tableName: string;
-
-  switch (rideType) {
-    case RideType.GreenCab:
-      tableName = 'green_tripmetrics';
-      break;
-
-    case RideType.YellowCab:
-      tableName = 'yellow_tripmetrics';
-      break;
-
-    case RideType.ForHireVehicle:
-      tableName = 'fhv_tripmetrics';
-      break;
-
-    default:
-      throw new Error('Invalid Ride Type');
+): string {
+  // if we dont' have a match, throw b/c there's literally nothing else we can do here
+  if (!boroughQuerySourceMap.has(rideType)) {
+    throw new Error(`Ride Type ${rideType} is not supported`);
   }
+
+  const tableName = boroughQuerySourceMap.get(rideType);
 
   // TODO: parameterize the query or rely on SPROC to protect against SQL-injection
   // (see https://github.com/tediousjs/node-mssql#sql-injection)
