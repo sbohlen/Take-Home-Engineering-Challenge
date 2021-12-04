@@ -66,6 +66,8 @@ DATEPART(HOUR, td.lpep_pickup_datetime) as tripHour,
 	order by answer desc
     ) as maximumDuration
 
+into green_tripmetrics
+
 from green_tripdata td
 
 --exclude the unresolvable "zone id zero" entries (dirty data!)

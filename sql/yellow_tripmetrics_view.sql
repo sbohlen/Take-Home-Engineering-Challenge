@@ -13,7 +13,7 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select AVG(tdcosts.total_amount)
    	from yellow_tripdata tdcosts
 	where tdcosts.total_amount > 0
-    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdcosts.PUBoroughID = td.PUBoroughID
 	and tdcosts.DOBoroughID = td.DOBoroughID
     ) as averageCost,
@@ -22,7 +22,7 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select MIN(tdcosts.total_amount)
    	from yellow_tripdata tdcosts
 	where tdcosts.total_amount > 0
-    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdcosts.PUBoroughID = td.PUBoroughID
 	and tdcosts.DOBoroughID = td.DOBoroughID
     ) as minimumCost,
@@ -31,7 +31,7 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select MAX(tdcosts.total_amount)
    	from yellow_tripdata tdcosts
 	where tdcosts.total_amount > 0
-    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+    and DATEPART(HOUR, tdcosts.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdcosts.PUBoroughID = td.PUBoroughID
 	and tdcosts.DOBoroughID = td.DOBoroughID
     ) as maximumCost,
@@ -40,7 +40,7 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select top 1 AVG(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
    	from yellow_tripdata tdtimes
 	where
-	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdtimes.PUBoroughID = td.PUBoroughID
 	and tdtimes.DOBoroughID = td.DOBoroughID
 	order by answer desc
@@ -50,7 +50,7 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select top 1 MIN(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
    	from yellow_tripdata tdtimes
 	where
-	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdtimes.PUBoroughID = td.PUBoroughID
 	and tdtimes.DOBoroughID = td.DOBoroughID
 	order by answer desc
@@ -60,11 +60,13 @@ DATEPART(HOUR, td.tpep_pickup_datetime) as tripHour,
 (select top 1 MAX(DATEDIFF(minute, td.tpep_pickup_datetime, td.tpep_dropoff_datetime)) as answer
    	from yellow_tripdata tdtimes
 	where
-	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime) 
+	DATEPART(HOUR, tdtimes.tpep_pickup_datetime) = DATEPART(HOUR, td.tpep_pickup_datetime)
 	and tdtimes.PUBoroughID = td.PUBoroughID
 	and tdtimes.DOBoroughID = td.DOBoroughID
 	order by answer desc
     ) as maximumDuration
+
+into yellow_tripmetrics
 
 from yellow_tripdata td
 

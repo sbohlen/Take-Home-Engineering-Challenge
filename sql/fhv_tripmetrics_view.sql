@@ -39,6 +39,8 @@ DATEPART(HOUR, td.pickup_datetime) as tripHour,
 	order by answer desc
     ) as maximumDuration
 
+into fhv_tripmetrics
+
 from fhv_tripdata td
 
 --exclude the unresolvable "zone id zero" entries (dirty data!)
