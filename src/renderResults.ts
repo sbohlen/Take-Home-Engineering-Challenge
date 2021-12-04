@@ -22,8 +22,11 @@ function renderData(result: TripMetricsQueryResult) {
     `${result.metrics.durationMinimum.toFixed(0)} minutes`,
   ]);
 
-  // note: costs are not present in the data for FHVs
-  if (result.metrics.rideType !== RideType.ForHireVehicle) {
+  // note: costs are only present in the data for YELLOW and GREEN cabs
+  if (
+    result.metrics.rideType === RideType.YellowCab ||
+    result.metrics.rideType === RideType.GreenCab
+  ) {
     output.push([
       'Average Ride Cost',
       `$ ${result.metrics.costAverage.toFixed(2)}`,
