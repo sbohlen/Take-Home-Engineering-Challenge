@@ -2,6 +2,8 @@ import { Boroughs } from './Boroughs';
 import { getTripMetrics } from './getTripMetrics';
 import { RideType } from './RideType';
 
+// TODO: mock the underlying database calls to avoid brittle state dependencies in these tests
+
 describe('when requesting AVAILABLE trip metrics', () => {
   const originalBorough = Boroughs.Bronx;
   const destinationBorough = Boroughs.Manhattan;
@@ -36,7 +38,7 @@ describe('when requesting UNAVAILABLE trip metrics', () => {
   const rideType = RideType.YellowCab;
   const rideHour = 4;
 
-  it('should return expected none-found values', async () => {
+  it('should return expected none-found flags', async () => {
     const result = await getTripMetrics(
       originalBorough,
       destinationBorough,
