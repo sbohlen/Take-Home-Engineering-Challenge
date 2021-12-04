@@ -66,6 +66,9 @@ This project requires an available Microsoft SQL Server into which the collected
 To setup the necessary database, perform the following steps:
 
 1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is in any way _unique_ to any of the various SQL Server product offerings.
+
+   > Note: a low-friction way to get up and running with your own SQL Server instance may be to deploy [the Microsoft-provided pre-built Docker Container image for SQL Server](https://hub.docker.com/_/microsoft-mssql-server).
+
 1. Create a new database named `takehomechallenge` on the SQL Server.
 1. Run the script located in the repository at `./sql/create_tripdata_tables.sql` in the database to create four new tables as follows:
 
