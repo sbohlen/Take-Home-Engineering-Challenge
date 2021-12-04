@@ -61,13 +61,13 @@ This project is configured to transpile the TypeScript source files into ECMAscr
 
 ### Database setup and configuration
 
-This project requires an available Microsoft SQL Server for the system to query against into which the collected Taxi/Ride data must first be imported.
+This project requires an available Microsoft SQL Server into which the collected Taxi/Ride data must first be imported for the system to subsequently query against.
 
 To setup the necessary database, perform the following steps:
 
-1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is unique to any of the various SQL Server product offerings.
+1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is in any way _unique_ to any of the various SQL Server product offerings.
 1. Create a new database named `takehomechallenge` on the SQL Server.
-1. Run the script located in the repository at `./sql/create_tripdata_tables.sql` to create four new tables in the new database as follows:
+1. Run the script located in the repository at `./sql/create_tripdata_tables.sql` in the database to create four new tables as follows:
 
    | table              | use                                                  | example direct download URL for related source data file                 |
    | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -77,9 +77,9 @@ To setup the necessary database, perform the following steps:
    | `taxi_zone_lookup` | zone/borough lookup data referenced by the trip data | <https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv>            |
 
 1. Navigate to [the NYC TLC data download page](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page) as [outlined here](#The-Problem) and acquire the necessary files correlated to each of the above four tables.
-1. Import the acquired four categories of source data from the TLC data download page into each of the four tables in the database. The naming convention for each of the tables makes it straightforward to relate each table to its correlated category of intended source data.
-1. Run the script in the repository at `./sql/build_borough_lookup_table.sql` to create and generate the data for the new `borough_lookup` table in the database
-1. Run the script in the repository at `./sql/update_tripdata_tables_with_borough_ids.sql` to update the `*_tripdata` tables with the appropriate values from the `borough_lookup` table.
+1. Import the acquired four categories of source data from the TLC data download page into each of the four tables in the database. The naming convention for each of the tables makes it straightforward to relate each table to its correlated category of intended source data file(s).
+1. Run the script in the repository at `./sql/build_borough_lookup_table.sql` in the database to create and generate the data for the new `borough_lookup` table.
+1. Run the script in the repository at `./sql/update_tripdata_tables_with_borough_ids.sql` in the database to update the `*_tripdata` tables with the appropriate values from the `borough_lookup` table.
 1. Execute each of the following scripts in the repository to create the tripmetrics tables for each of the three categories of trips/rides:
 
    | table                                      | use                                |
@@ -89,6 +89,8 @@ To setup the necessary database, perform the following steps:
    | `./sql/build_fhv_tripmetrics_table.sql`    | trip metrics for for-hire-vehicles |
 
    > Note that these three scripts each perform time-consuming/resource-intensive aggregation, lookups, calculations, and other analysis queries over the often-large trip data in each of the trip/ride categories imported in the prior step(s). These queries are undertaken after the data import step(s) to extract meaningful metrics to which the system will subsequently make queries directly at runtime. Depending upon the resource constraints of the system hosting your SQL Server, each of these queries may well require significant time to complete (e.g., anywhere from 2-5 to 10-15+ minutes). Please be patient; this is the conceptual equivalent of building a set of OLAP-friendly de-normalized data structures to accelerate subsequent run-time queries and so this up-front data-ingestion-time investment will pay performance dividends at run-time.
+
+   > Note also that this step (the re-running of each of these three scripts to re-calculated the metrics) is required _each time_ the underlying data in any of the `*_tripdata` tables is updated/modified.
 
 1. On the (usually local) system from which you intend to run the solution to query the database, configure the following environment variables for the desired database connection:
 
