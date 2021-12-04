@@ -21,7 +21,7 @@ function getConnectionConfig() {
   };
 }
 
-function getQuery(
+function buildQuery(
   origin: Boroughs,
   destination: Boroughs,
   rideHour: number,
@@ -100,8 +100,10 @@ export async function getTripMetrics(
   const request = new mssql.Request();
 
   const result = await request.query(
-    getQuery(origin, destination, rideHour, rideType),
+    buildQuery(origin, destination, rideHour, rideType),
   );
+
+  mssql.close();
 
   const tripMetricsQueryResult = buildTripMetricsQueryResult(result, rideType);
 
