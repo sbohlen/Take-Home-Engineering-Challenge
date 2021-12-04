@@ -2,7 +2,7 @@ import { Boroughs } from './Boroughs';
 import { getTripMetrics } from './getTripMetrics';
 import { RideType } from './RideType';
 
-describe('when getting trip metrics', () => {
+describe('when requesting available trip metrics', () => {
   const originalBorough = Boroughs.Bronx;
   const destinationBorough = Boroughs.Manhattan;
   const rideType = RideType.YellowCab;
@@ -16,6 +16,7 @@ describe('when getting trip metrics', () => {
       rideType,
     );
 
+    expect(result.hasData).toBeTruthy();
     expect(result.metrics.origin).toEqual(originalBorough);
     expect(result.metrics.destination).toEqual(destinationBorough);
     expect(result.metrics.rideType).toEqual(rideType);
