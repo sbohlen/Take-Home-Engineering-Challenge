@@ -90,7 +90,7 @@ To setup the necessary database, perform the following steps:
 
    > Note that these three scripts each perform time-consuming/resource-intensive aggregation, lookups, calculations, and other analysis queries over the often-large trip data in each of the trip/ride categories imported in the prior step(s). These queries are undertaken after the data import step(s) to extract meaningful metrics to which the system will subsequently make queries directly at runtime. Depending upon the resource constraints of the system hosting your SQL Server, each of these queries may well require significant time to complete (e.g., anywhere from 2-5 to 10-15+ minutes). Please be patient; this is the conceptual equivalent of building a set of OLAP-friendly de-normalized data structures to accelerate subsequent run-time queries and so this up-front data-ingestion-time investment will pay performance dividends at run-time.
 
-   > Note also that this step (the re-running of each of these three scripts to re-calculated the metrics) is required _each time_ the underlying data in any of the `*_tripdata` tables is updated/modified.
+   > Note also that this step (the re-running of each of these three scripts to re-calculate the related metrics tables) is required _each time_ the underlying data in any of the `*_tripdata` tables is updated/modified.
 
 1. On the (usually local) system from which you intend to run the solution to query the database, configure the following environment variables for the desired database connection:
 
