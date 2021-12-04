@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as mssql from 'mssql';
 import { Boroughs } from './Boroughs';
+import { logger } from './logger';
 import { RideType } from './RideType';
 import { TripMetrics } from './TripMetrics';
 import { TripMetricsQueryResult } from './TripMetricsQueryResult';
@@ -17,7 +18,7 @@ boroughQuerySourceMap.set(RideType.YellowCab, 'yellow_tripmetrics');
 boroughQuerySourceMap.set(RideType.ForHireVehicle, 'fhv_tripmetrics');
 
 function getConnectionConfig() {
-  return {
+  const config = {
     user: process.env.SQL_USERNAME,
     password: process.env.SQL_PASSWORD,
     server: process.env.SQL_SERVER_NAME,
@@ -28,6 +29,10 @@ function getConnectionConfig() {
       trustServerCertificate: false,
     },
   };
+
+  logger.debug(`Using connection config: ${JSON.stringify(config)}`);
+
+  return config;
 }
 
 function buildQuery(
@@ -36,12 +41,20 @@ function buildQuery(
   rideHour: number,
   rideType: RideType,
 ): string {
+  // eslint-disable-next-line max-len
+  logger.debug(
+    `Building query for origin: ${origin} destination: ${destination} rideHour: ${rideHour} rideType: ${rideType}`,
+  );
+
   // if we dont' have a match, throw b/c there's literally nothing else we can do here
+  //  note: should *never* happen b/c yargs should prevent invalid input from reaching this far
   if (!boroughQuerySourceMap.has(rideType)) {
     throw new Error(`Ride Type ${rideType} is not supported`);
   }
 
   const tableName = boroughQuerySourceMap.get(rideType);
+
+  logger.debug(`Using table ${tableName} in query`);
 
   // TODO: parameterize the query or rely on SPROC to protect against SQL-injection
   // (see https://github.com/tediousjs/node-mssql#sql-injection)
@@ -55,6 +68,13 @@ function buildTripMetricsQueryResult(
   result: any,
   rideType: RideType,
 ): TripMetricsQueryResult {
+  // eslint-disable-next-line max-len
+  logger.debug(
+    `Building TripMetricsQueryResult for rideType: ${rideType} from queryResponse: ${JSON.stringify(
+      result,
+    )}`,
+  );
+
   const tripMetricsQueryResult = new TripMetricsQueryResult();
 
   if (result.rowsAffected[0] === 1) {
@@ -88,6 +108,10 @@ function buildTripMetricsQueryResult(
     tripMetricsQueryResult.metrics = metrics;
     tripMetricsQueryResult.hasData = true;
   }
+
+  logger.debug(
+    `TripMetricsQueryResult built: ${JSON.stringify(tripMetricsQueryResult)}`,
+  );
 
   return tripMetricsQueryResult;
 }
