@@ -60,8 +60,12 @@ function buildTripMetricsQueryResult(
   if (result.rowsAffected[0] === 1) {
     const metrics = new TripMetrics();
 
+    // TODO: fix this in T-SQL data ingestion scripts and remove the calls to trim()
+    //        (this is a code-level fix for a bug in the data: origin and destination
+    //        values *sometimes* contain trailing whitespace for reasons TBD)
     metrics.origin = result.recordset[0].origin.trim();
     metrics.destination = result.recordset[0].destination.trim();
+
     metrics.tripHour = result.recordset[0].tripHour;
     metrics.rideType = rideType;
 
