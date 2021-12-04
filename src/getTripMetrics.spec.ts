@@ -2,13 +2,13 @@ import { Boroughs } from './Boroughs';
 import { getTripMetrics } from './getTripMetrics';
 import { RideType } from './RideType';
 
-describe('when requesting available trip metrics', () => {
+describe('when requesting AVAILABLE trip metrics', () => {
   const originalBorough = Boroughs.Bronx;
   const destinationBorough = Boroughs.Manhattan;
   const rideType = RideType.YellowCab;
   const rideHour = 4;
 
-  it('should return expected values', async () => {
+  it('should return expected metrics', async () => {
     const result = await getTripMetrics(
       originalBorough,
       destinationBorough,
@@ -27,5 +27,23 @@ describe('when requesting available trip metrics', () => {
     expect(result.metrics.costMinimum).toBeGreaterThan(0);
     expect(result.metrics.durationMaximum).toBeGreaterThan(0);
     expect(result.metrics.durationMinimum).toBeGreaterThan(0);
+  });
+});
+
+describe('when requesting UNAVAILABLE trip metrics', () => {
+  const originalBorough = Boroughs.Bronx;
+  const destinationBorough = Boroughs.StateIsland;
+  const rideType = RideType.YellowCab;
+  const rideHour = 4;
+
+  it('should return expected none-found values', async () => {
+    const result = await getTripMetrics(
+      originalBorough,
+      destinationBorough,
+      rideHour,
+      rideType,
+    );
+
+    expect(result.hasData).toBeFalsy();
   });
 });
