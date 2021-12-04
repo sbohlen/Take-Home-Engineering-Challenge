@@ -8,7 +8,7 @@ export function renderResults(result: TripMetricsQueryResult) {
     output.push(['Origin', result.metrics.origin]);
     output.push(['Destination', result.metrics.destination]);
     output.push(['Ride Type', result.metrics.rideType]);
-    output.push(['Hour of the day (0-23)', `${result.metrics.rideHour}`]);
+    output.push(['Hour of the day (0-23)', `${result.metrics.tripHour}`]);
     output.push([
       'Average Ride Duration',
       `${result.metrics.durationAverage.toFixed(0)} minutes`,

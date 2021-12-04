@@ -8,7 +8,7 @@ export class TripMetrics {
 
   rideType: RideType;
 
-  rideHour: number;
+  tripHour: number;
 
   durationAverage: number;
 

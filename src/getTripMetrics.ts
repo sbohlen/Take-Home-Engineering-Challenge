@@ -63,7 +63,7 @@ function buildTripMetricsQueryResult(
 
     metrics.origin = result.recordset[0].origin.trim();
     metrics.destination = result.recordset[0].destination.trim();
-    metrics.rideHour = result.recordset[0].tripHour;
+    metrics.tripHour = result.recordset[0].tripHour;
     metrics.rideType = rideType;
 
     metrics.durationMaximum = 100 - Math.random() * 10;

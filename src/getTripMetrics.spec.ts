@@ -19,7 +19,7 @@ describe('when getting trip metrics', () => {
     expect(result.metrics.origin).toEqual(originalBorough);
     expect(result.metrics.destination).toEqual(destinationBorough);
     expect(result.metrics.rideType).toEqual(rideType);
-    expect(result.metrics.rideHour).toEqual(rideHour);
+    expect(result.metrics.tripHour).toEqual(rideHour);
     expect(result.metrics.costAverage).toBeGreaterThan(0);
     expect(result.metrics.durationAverage).toBeGreaterThan(0);
     expect(result.metrics.costMaximum).toBeGreaterThan(0);
