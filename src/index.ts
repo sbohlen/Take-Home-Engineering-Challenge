@@ -32,7 +32,7 @@ import { RideType } from './RideType';
         `${new Date(Date.now()).getHours().toString().padStart(2, '0')}`,
         10,
       ),
-      description: 'Hour of the day for the trip (0-23)',
+      description: 'Hour of the day for the trip (0-23), defaults to NOW',
     },
     rideType: {
       choices: allRideTypes,
