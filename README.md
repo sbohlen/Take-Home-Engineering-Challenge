@@ -69,7 +69,7 @@ To setup the necessary database, perform the following steps:
 
    > Note: a low-friction way to get up and running with your own SQL Server instance may be to deploy [the Microsoft-provided pre-built Docker Container image for SQL Server](https://hub.docker.com/_/microsoft-mssql-server).
 
-   > Note: this sample uses SQL Server authentication rather than integrated Windows-Auth. Ensure that you configure your deployed SQL Server to accept SQL Server authentication.
+   > Note: this sample uses SQL Server authentication rather than integrated Windows-Auth. Ensure that you configure your deployed SQL Server to accept SQL Server authentication and define the necessary SQL Server login username/password with proper permissions to the appropriate database.
 
 1. Create a new database named `takehomechallenge` on the SQL Server.
 1. Run the script located in the repository at `./sql/create_tripdata_tables.sql` in the database to create four new tables as follows:
