@@ -46,6 +46,8 @@ function buildQuery(
       throw new Error('Invalid Ride Type');
   }
 
+  // TODO: parameterize the query or rely on SPROC to protect again SQL-injection
+  // (see https://github.com/tediousjs/node-mssql#sql-injection)
   return `SELECT * FROM ${tableName}
             WHERE origin = '${origin}'
             AND destination = '${destination}'
