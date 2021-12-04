@@ -46,7 +46,7 @@ function buildQuery(
       throw new Error('Invalid Ride Type');
   }
 
-  // TODO: parameterize the query or rely on SPROC to protect again SQL-injection
+  // TODO: parameterize the query or rely on SPROC to protect against SQL-injection
   // (see https://github.com/tediousjs/node-mssql#sql-injection)
   return `SELECT * FROM ${tableName}
             WHERE origin = '${origin}'
@@ -91,12 +91,12 @@ function buildTripMetricsQueryResult(
   return tripMetricsQueryResult;
 }
 
-export async function getTripMetrics(
+async function doQuery(
   origin: Boroughs,
   destination: Boroughs,
   rideHour: number,
   rideType: RideType,
-): Promise<TripMetricsQueryResult> {
+) {
   await mssql.connect(getConnectionConfig());
 
   const request = new mssql.Request();
@@ -107,7 +107,15 @@ export async function getTripMetrics(
 
   mssql.close();
 
-  const tripMetricsQueryResult = buildTripMetricsQueryResult(result, rideType);
+  return result;
+}
 
-  return tripMetricsQueryResult;
+export async function getTripMetrics(
+  origin: Boroughs,
+  destination: Boroughs,
+  rideHour: number,
+  rideType: RideType,
+): Promise<TripMetricsQueryResult> {
+  const result = await doQuery(origin, destination, rideHour, rideType);
+  return buildTripMetricsQueryResult(result, rideType);
 }
