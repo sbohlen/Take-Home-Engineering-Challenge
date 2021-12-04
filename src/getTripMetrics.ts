@@ -52,6 +52,43 @@ function getQuery(
             AND tripHour = ${rideHour}`;
 }
 
+function buildTripMetricsQueryResult(
+  result: any,
+  rideType: RideType,
+): TripMetricsQueryResult {
+  const tripMetricsQueryResult = new TripMetricsQueryResult();
+
+  if (result.rowsAffected[0] === 1) {
+    const metrics = new TripMetrics();
+
+    metrics.origin = result.recordset[0].origin.trim();
+    metrics.destination = result.recordset[0].destination.trim();
+    metrics.rideHour = result.recordset[0].tripHour;
+    metrics.rideType = rideType;
+
+    metrics.durationMaximum = 100 - Math.random() * 10;
+    metrics.durationMinimum = Math.random() * 10;
+    metrics.durationAverage = Number.parseFloat(
+      (Math.random() * 100).toFixed(2),
+    );
+
+    // only YELLOW and GREEN cabs have cost data available
+    if (
+      metrics.rideType === RideType.GreenCab ||
+      metrics.rideType === RideType.YellowCab
+    ) {
+      metrics.costMaximum = 100.0 - Math.random() * 10;
+      metrics.costMinimum = Math.random() * 10;
+      metrics.costAverage = Number.parseFloat((Math.random() * 100).toFixed(2));
+    }
+
+    tripMetricsQueryResult.metrics = metrics;
+    tripMetricsQueryResult.hasData = true;
+  }
+
+  return tripMetricsQueryResult;
+}
+
 export async function getTripMetrics(
   origin: Boroughs,
   destination: Boroughs,
@@ -66,32 +103,7 @@ export async function getTripMetrics(
     getQuery(origin, destination, rideHour, rideType),
   );
 
-  const tripMetricsQueryResult = new TripMetricsQueryResult();
-
-  if (result.rowsAffected[0] === 1) {
-    const metrics = new TripMetrics();
-
-    metrics.origin = origin;
-    metrics.destination = destination;
-    metrics.rideHour = rideHour;
-    metrics.rideType = rideType;
-
-    metrics.durationMaximum = 100 - Math.random() * 10;
-    metrics.durationMinimum = Math.random() * 10;
-    metrics.durationAverage = Number.parseFloat(
-      (Math.random() * 100).toFixed(2),
-    );
-
-    // only YELLOW and GREEN cabs have cost data available
-    if (rideType === RideType.GreenCab || rideType === RideType.YellowCab) {
-      metrics.costMaximum = 100.0 - Math.random() * 10;
-      metrics.costMinimum = Math.random() * 10;
-      metrics.costAverage = Number.parseFloat((Math.random() * 100).toFixed(2));
-    }
-
-    tripMetricsQueryResult.metrics = metrics;
-    tripMetricsQueryResult.hasData = true;
-  }
+  const tripMetricsQueryResult = buildTripMetricsQueryResult(result, rideType);
 
   return tripMetricsQueryResult;
 }
