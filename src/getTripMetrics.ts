@@ -92,12 +92,16 @@ function buildTripMetricsQueryResult(
   return tripMetricsQueryResult;
 }
 
+// TODO: declare the return type of Promise<IResult<T>>
+//        it should be poss. to import the @types for mssql and strongly-type
+//        the return in this function signature
+//
 async function doQuery(
   origin: Boroughs,
   destination: Boroughs,
   rideHour: number,
   rideType: RideType,
-) {
+): Promise<any> {
   await mssql.connect(getConnectionConfig());
 
   const request = new mssql.Request();
