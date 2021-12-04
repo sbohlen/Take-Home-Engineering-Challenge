@@ -49,7 +49,7 @@ This project is a reference implementation in [node.js](https://nodejs.org/)/[Ty
 
 ### Dependencies
 
-The only dependency (beyond those included in the project/code itself) is that of the `node.js` runtime (and the accompanying `npm` package manager). This code was developed against the node.js runtime v16.8.0. It has not been tested against either earlier or later versions of node.js, and so attempting to run the code against other versions is left as an experiment for the reader ;)
+Other than the [database setup and configuration](#Database-setup-and-configuration), the only dependency (beyond those included in the project/code itself) is that of the `node.js` runtime (and the accompanying `npm` package manager). This code was developed against the node.js runtime v16.8.0. It has not been tested against either earlier or later versions of node.js, and so attempting to run the code against other versions is left as an experiment for the reader ;)
 
 The project itself has a dependency upon the TypeScript language compiler, but this dependency will be resolved by the `npm` package manager during the steps in the [How-To-Run](#How-to-Run) or [Running Tests](#Running-Tests) sections. TypeScript has been specified as a solution-scoped `npm` package dependency so that it will not conflict with any other pre-installed versions of TypeScript on your system.
 
@@ -59,10 +59,53 @@ In the event of targeting a significantly earlier version of node.js, it may be 
 
 This project is configured to transpile the TypeScript source files into ECMAscript 2020-compatible Javascript. If a different Javascript compatibility target is desired, you may modify the provided `tsconfig.json` file accordingly. See [What is a tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) for more information.
 
+### Database setup and configuration
+
+This project requires an available Microsoft SQL Server for the system to query against into which the collected Taxi/Ride data must first be imported.
+
+To setup the necessary database, perform the following steps:
+
+1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is unique to any of the various SQL Server product offerings.
+1. Create a new database named `takehomechallenge` on the SQL Server.
+1. Run the script located in the repository at `./sql/create_tripdata_tables.sql` to create four new tables in the new database as follows:
+
+   | table              | use                                                  | example direct download URL for related source data file                 |
+   | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------ |
+   | `green_tripdata`   | trip data for green cabs                             | <https://s3.amazonaws.com/nyc-tlc/trip+data/green_tripdata_2021-01.csv>  |
+   | `yellow_tripdata`  | trip data for yellow cabs                            | <https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv> |
+   | `fhv_tripdata`     | trip data for for-hire-vehicles                      | <https://nyc-tlc.s3.amazonaws.com/trip+data/fhv_tripdata_2021-01.csv>    |
+   | `taxi_zone_lookup` | zone/borough lookup data referenced by the trip data | <https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv>            |
+
+1. Navigate to [the NYC TLC data download page](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page) as [outlined here](#The-Problem) and acquire the necessary files correlated to each of the above four tables.
+1. Import the acquired four categories of source data from the TLC data download page into each of the four tables in the database. The naming convention for each of the tables makes it straightforward to relate each table to its correlated category of intended source data.
+1. Run the script in the repository at `./sql/build_borough_lookup_table.sql` to create and generate the data for the new `borough_lookup` table in the database
+1. Run the script in the repository at `./sql/update_tripdata_tables_with_borough_ids.sql` to update the `*_tripdata` tables with the appropriate values from the `borough_lookup` table.
+1. Execute each of the following scripts in the repository to create the tripmetrics tables for each of the three categories of trips/rides:
+
+   | table                                      | use                                |
+   | ------------------------------------------ | ---------------------------------- |
+   | `./sql/build_green_tripmetrics_table.sql`  | trip metrics for green cabs        |
+   | `./sql/build_yellow_tripmetrics_table.sql` | trip metrics for yellow cabs       |
+   | `./sql/build_fhv_tripmetrics_table.sql`    | trip metrics for for-hire-vehicles |
+
+   > Note that these three scripts each perform time-consuming/resource-intensive aggregation, lookups, calculations, and other analysis queries over the often-large trip data in each of the trip/ride categories imported in the prior step(s). These queries are undertaken after the data import step(s) to extract meaningful metrics to which the system will subsequently make queries directly at runtime. Depending upon the resource constraints of the system hosting your SQL Server, each of these queries may well require significant time to complete (e.g., anywhere from 2-5 to 10-15+ minutes). Please be patient; this is the conceptual equivalent of building a set of OLAP-friendly de-normalized data structures to accelerate subsequent run-time queries and so this up-front data-ingestion-time investment will pay performance dividends at run-time.
+
+1. On the (usually local) system from which you intend to run the solution to query the database, configure the following environment variables for the desired database connection:
+
+   | environment variable | use                         | example             |
+   | -------------------- | --------------------------- | ------------------- |
+   | SQL_SERVER_NAME      | SQL Server hostname         | myserver.domain.com |
+   | SQL_DATABASE_NAME    | SQL Database name on server | takehomechallenge   |
+   | SQL_USERNAME         | username for database       | challengeuser       |
+   | SQL_PASSWORD         | password for username       | myPassw@rd          |
+
+   > Note that if you are running this system in an IDE (e.g., VSCode), there is a provided `./.env.template` file that can be leveraged to simulate these same values being provided to the running system via environament variables. To use this, copy the `./.env.template` file to `./.env` and edit its contents accordingly. When the running system detects the presence of this `.env` file, it will use the values found there in place of environment variables.
+
 ### How-to-Run
 
 1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
 1. clone this repo
+1. complete the [database setup and configuration](#Database-setup-and-configuration) steps
 1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
 1. from the root of the repo, run the command `npm start` to transpile the TypeScript to Javascript and start the app
 
