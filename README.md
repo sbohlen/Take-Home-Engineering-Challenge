@@ -65,7 +65,7 @@ This project requires an available Microsoft SQL Server into which the collected
 
 To setup the necessary database, perform the following steps:
 
-> **TODO: create and publish a container image having the already-setup/configured SQL Server and containing already-hydrated table data to accelerate the rapid-evaluate/solution-exploration use-case.**
+> **TODO: create and publish a container image having the already-setup/configured SQL Server and containing already-hydrated table data to accelerate the rapid-evaluate/solution-exploration use-case and obviate all steps in this section.**
 
 1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is in any way _unique_ to any of the various SQL Server product offerings.
 
