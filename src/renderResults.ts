@@ -1,8 +1,11 @@
 /* eslint-disable no-console */
+import { logger } from './logger';
 import { RideType } from './RideType';
 import { TripMetricsQueryResult } from './TripMetricsQueryResult';
 
 function renderData(result: TripMetricsQueryResult) {
+  logger.debug(`Rendering results: ${JSON.stringify(result)}`);
+
   const output = new Array<Array<string>>();
 
   output.push(['Origin', result.metrics.origin]);
