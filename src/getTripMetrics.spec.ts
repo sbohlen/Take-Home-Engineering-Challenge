@@ -4,27 +4,27 @@ import { RideType } from './RideType';
 
 describe('when getting trip metrics', () => {
   const originalBorough = Boroughs.Bronx;
-  const destinationBorough = Boroughs.StateIsland;
-  const rideType = RideType.GreenCab;
-  const rideHour = 10;
+  const destinationBorough = Boroughs.Manhattan;
+  const rideType = RideType.YellowCab;
+  const rideHour = 4;
 
   it('should return expected values', async () => {
-    const metrics = await getTripMetrics(
+    const result = await getTripMetrics(
       originalBorough,
       destinationBorough,
       rideHour,
       rideType,
     );
 
-    expect(metrics.origin).toEqual(originalBorough);
-    expect(metrics.destination).toEqual(destinationBorough);
-    expect(metrics.rideType).toEqual(rideType);
-    expect(metrics.rideHour).toEqual(rideHour);
-    expect(metrics.costAverage).toBeGreaterThan(0);
-    expect(metrics.durationAverage).toBeGreaterThan(0);
-    expect(metrics.costMaximum).toBeGreaterThan(0);
-    expect(metrics.costMinimum).toBeGreaterThan(0);
-    expect(metrics.durationMaximum).toBeGreaterThan(0);
-    expect(metrics.durationMinimum).toBeGreaterThan(0);
+    expect(result.metrics.origin).toEqual(originalBorough);
+    expect(result.metrics.destination).toEqual(destinationBorough);
+    expect(result.metrics.rideType).toEqual(rideType);
+    expect(result.metrics.rideHour).toEqual(rideHour);
+    expect(result.metrics.costAverage).toBeGreaterThan(0);
+    expect(result.metrics.durationAverage).toBeGreaterThan(0);
+    expect(result.metrics.costMaximum).toBeGreaterThan(0);
+    expect(result.metrics.costMinimum).toBeGreaterThan(0);
+    expect(result.metrics.durationMaximum).toBeGreaterThan(0);
+    expect(result.metrics.durationMinimum).toBeGreaterThan(0);
   });
 });
