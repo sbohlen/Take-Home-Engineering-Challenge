@@ -51,7 +51,7 @@ This project is a reference implementation in [node.js](https://nodejs.org/)/[Ty
 
 Other than the [database setup and configuration](#Database-setup-and-configuration), the only dependency (beyond those included in the project/code itself) is that of the `node.js` runtime (and the accompanying `npm` package manager). This code was developed against the node.js runtime v16.8.0. It has not been tested against either earlier or later versions of node.js, and so attempting to run the code against other versions is left as an experiment for the reader ;)
 
-The project itself has a dependency upon the TypeScript language compiler, but this dependency will be resolved by the `npm` package manager during the steps in the [How-To-Run](#How-to-Run) or [Running Tests](#Running-Tests) sections. TypeScript has been specified as a solution-scoped `npm` package dependency so that it will not conflict with any other pre-installed versions of TypeScript on your system.
+The project itself has a dependency upon the TypeScript language compiler, but this dependency will be resolved by the `npm` package manager during the steps in the [How-To-Run](#How-to-run-locally) or [Running Tests](#Running-Tests) sections. TypeScript has been specified as a solution-scoped `npm` package dependency so that it will not conflict with any other pre-installed versions of TypeScript on your system.
 
 In the event of targeting a significantly earlier version of node.js, it may be necessary to adjust the TypeScript transpiler targeting to produce an earlier version of Javascript as identified in the [Typescript and JavaScript compatibility](#Typescript-and-JavaScript-compatibility) section of this doc.
 
@@ -61,11 +61,28 @@ This project is configured to transpile the TypeScript source files into ECMAscr
 
 ### Database setup and configuration
 
-This project requires an available Microsoft SQL Server into which the collected Taxi/Ride data must first be imported for the system to subsequently query against.
+This project requires an available Microsoft SQL Server into which the collected Taxi/Ride data must first be imported for the system to subsequently query against. To facilitate interaction with the solution code, two docker container images are available as follows:
 
-> **TODO: create and publish a container image having the already-setup/configured SQL Server and containing already-hydrated table data to accelerate the rapid-evaluate/solution-exploration use-case and obviate all steps in this section.**
+| Container Image name:tag for Docker CLI use               | Docker Hub URL                                                                             | Description                                                         |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| docker.io/sbohlen/takehomechallenge-database-only         | <https://hub.docker.com/repository/docker/sbohlen/takehomechallenge-database-only>         | SQL Server 2019 for Linux with sample ride data ingested            |
+| docker.io/sbohlen/takehomechallenge-database-and-solution | <https://hub.docker.com/repository/docker/sbohlen/takehomechallenge-database-and-solution> | same as above _plus_ the deployed application from this github repo |
 
-To setup the necessary database, perform the following steps:
+If you plan to run the code locally but leverage the container for the database, perform the following steps (assumes Docker is installed and running properly on your system):
+
+1. Pull the container image from docker hub"
+
+   > `docker pull docker.io/sbohlen/takehomechallenge-database-only:latest`
+
+1. Start the database container, passing the necessary environment variables for the SQL Server service:
+
+   > `docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Password123!" -p 1433:1433 -d docker.io/sbohlen/takehomechallenge-database-only:latest`
+
+If you plan to run the code and the database both entirely from the proffered container, instead refer to the [How to Run From the Container Image](#How-to-Run-From-the-Container-Image) section.
+
+**If you prefer _not_ to make use of either of the containers proffered above, you will need to setup and configure your own SQL Server database and ingest the necessary data into it prior to running the solution.**
+
+To setup the necessary database instead of leveraging the proffered containerized database, perform the following steps:
 
 1. Deploy Microsoft SQL Server 2019 or later [as described here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). The choice to deploy [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/) or on-prem (e.g., licensed, free trial, developer edition, or express edition) is entirely up to you. Each have difference pros and cons, but this project does not require any feature/capability that is in any way _unique_ to any of the various SQL Server product offerings.
 
@@ -108,9 +125,9 @@ To setup the necessary database, perform the following steps:
    | SQL_USERNAME         | username for database       | challengeuser       |
    | SQL_PASSWORD         | password for username       | myPassw@rd          |
 
-   > Note that if you are running this system in an IDE (e.g., VSCode), there is a provided `./.env.template` file that can be leveraged to simulate these same values being provided to the running system via environament variables. To use this, copy the `./.env.template` file to `./.env` and edit its contents accordingly. When the running system detects the presence of this `.env` file, it will use the values found there in place of environment variables.
+   > Note that if you are running this system in an IDE (e.g., VSCode), there is a provided `./.env.template` file that can be leveraged to simulate these same values being provided to the running system via environment variables. To use this, copy the `./.env.template` file to `./.env` and edit its contents accordingly. When the running system detects the presence of this `.env` file, it will use the values found there in place of environment variables.
 
-### How-to-Run
+### How to Run Locally
 
 1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
 1. clone this repo
@@ -118,11 +135,33 @@ To setup the necessary database, perform the following steps:
 1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
 1. from the root of the repo, run the command `npm start` to transpile the TypeScript to Javascript and start the app
 
+### How to Run From the Container Image
+
+If you plan to run the code and the database entirely from the container, perform the following steps (assumes Docker is installed and running properly on your system):
+
+1. Pull the container image from docker hub:
+
+   > `docker pull docker.io/sbohlen/takehomechallenge-database-and-solution:latest`
+
+1. Start the database container, passing the necessary environment variables for both the SQL Server service _and_ the solution:
+
+   > `docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Password123!" -e "SQL_SERVER_NAME=localhost" -e "SQL_DATABASE_NAME=takehomechallenge" -e "SQL_USERNAME=sa" -e "SQL_PASSWORD=Password123!" -p 1433:1433 -d docker.io/sbohlen/takehomechallenge-database-and-solution:latest`
+
+1. Start a remote interactive terminal connection to the running container:
+
+   > `docker exec -it <container-name-or-container-id> /bin/bash`
+
+1. The container should place you in the correct `/app/` directory in the container by default. From the docker-provided remote terminal prompt, use the node.js runtime already installed in the container to invoke the solution with its defaults to confirm proper functionality. The SQL Server service in the container _will_ automatically start, but it can often require 30-60 seconds to complete its start-up when the container is started in step 2. If an error is returned, wait an additional 10-15 seconds and attempt again.
+
+   > _root@\<container-id>:/app#_ `node index.js`
+
+   Experiment with other command-line arguments as shown in the next section.
+
 ### Command-line Arguments
 
 Running the above-referenced `npm start` command will execute the solution with its _default_ arguments. In addition to defaults, the application also accepts command-line parameters to control its behavior. To pass command-line parameters, perform the following steps:
 
-1. complete the steps in the the [How-to-Run](#How-to-Run) section _at least once_; this will produce the transpiled Javascript files in the `./dist/` folder
+1. complete the steps in the the [How-to-Run](#How-to-run-locally) section _at least once_; this will produce the transpiled Javascript files in the `./dist/` folder
 1. invoke the node runtime and pass it the path to the transpiled `./dist/index.js` file, accompanied by any desired command-line parameters
 
 Example: to display the built-in command-line help to learn about other available command-line parameters, run the following command from the root of the repository (assumes node.js is on your system path):
