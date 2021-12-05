@@ -153,3 +153,6 @@ dist
 
 # application debug log file
 debug.log
+
+# import data (too large for git and any case not worth commiting)
+/data
