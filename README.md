@@ -147,7 +147,7 @@ If you plan to run the code and the database entirely from the container, perfor
 
    > `docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Password123!" -e "SQL_SERVER_NAME=localhost" -e "SQL_DATABASE_NAME=takehomechallenge" -e "SQL_USERNAME=sa" -e "SQL_PASSWORD=Password123!" -p 1433:1433 -d docker.io/sbohlen/takehomechallenge-database-and-solution:latest`
 
-1. Start a remote interactive terminal connection to the running container:
+1. Start a remote interactive terminal connection to the running container _(hint: the commands `docker container ls` or `docker ps` will both provide the necessary container-id or container-name values required for the following command)_:
 
    > `docker exec -it <container-name-or-container-id> /bin/bash`
 
