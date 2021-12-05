@@ -63,14 +63,14 @@ This project is configured to transpile the TypeScript source files into ECMAscr
 
 This project requires an available Microsoft SQL Server into which the collected Taxi/Ride data must first be imported for the system to subsequently query against. To facilitate interaction with the solution code, two docker container images are available as follows:
 
-| Container Image name:tag for Docker CLI use               | Docker Hub URL                                                                             | Description                                                         |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| docker.io/sbohlen/takehomechallenge-database-only         | <https://hub.docker.com/repository/docker/sbohlen/takehomechallenge-database-only>         | SQL Server 2019 for Linux with sample ride data ingested            |
-| docker.io/sbohlen/takehomechallenge-database-and-solution | <https://hub.docker.com/repository/docker/sbohlen/takehomechallenge-database-and-solution> | same as above _plus_ the deployed application from this github repo |
+| Container Image name:tag for Docker CLI use                      | Docker Hub URL                                                             | Description                                                         |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| docker.io/sbohlen/takehomechallenge-database-only:latest         | <https://hub.docker.com/r/sbohlen/takehomechallenge-database-only>         | SQL Server 2019 for Linux with sample ride data ingested            |
+| docker.io/sbohlen/takehomechallenge-database-and-solution:latest | <https://hub.docker.com/r/sbohlen/takehomechallenge-database-and-solution> | same as above _plus_ the deployed application from this github repo |
 
 If you plan to run the code locally but leverage the container for the database, perform the following steps (assumes Docker is installed and running properly on your system):
 
-1. Pull the container image from docker hub"
+1. Pull the container image from docker hub:
 
    > `docker pull docker.io/sbohlen/takehomechallenge-database-only:latest`
 
@@ -80,7 +80,7 @@ If you plan to run the code locally but leverage the container for the database,
 
 If you plan to run the code and the database both entirely from the proffered container, instead refer to the [How to Run From the Container Image](#How-to-Run-From-the-Container-Image) section.
 
-**If you prefer _not_ to make use of either of the containers proffered above, you will need to setup and configure your own SQL Server database and ingest the necessary data into it prior to running the solution.**
+**If you prefer _not_ to make use of either of the containers proffered above, you will need to setup and configure your own SQL Server database and ingest the necessary data into it prior to running the solution. Note that due to the complexity of these steps, selection of one of the available container-based options is strongly encouraged.**
 
 To setup the necessary database instead of leveraging the proffered containerized database, perform the following steps:
 
@@ -122,8 +122,8 @@ To setup the necessary database instead of leveraging the proffered containerize
    | -------------------- | --------------------------- | ------------------- |
    | SQL_SERVER_NAME      | SQL Server hostname         | myserver.domain.com |
    | SQL_DATABASE_NAME    | SQL Database name on server | takehomechallenge   |
-   | SQL_USERNAME         | username for database       | challengeuser       |
-   | SQL_PASSWORD         | password for username       | myPassw@rd          |
+   | SQL_USERNAME         | username for database       | sa                  |
+   | SQL_PASSWORD         | password for username       | Password123!        |
 
    > Note that if you are running this system in an IDE (e.g., VSCode), there is a provided `./.env.template` file that can be leveraged to simulate these same values being provided to the running system via environment variables. To use this, copy the `./.env.template` file to `./.env` and edit its contents accordingly. When the running system detects the presence of this `.env` file, it will use the values found there in place of environment variables.
 
@@ -131,7 +131,7 @@ To setup the necessary database instead of leveraging the proffered containerize
 
 1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
 1. clone this repo
-1. complete the [database setup and configuration](#Database-setup-and-configuration) steps
+1. complete the [database setup and configuration](#Database-setup-and-configuration) steps; _note that even if you are using the containerized database, so long as you are still running the solution code locally, you must still set the necessary environment variables for the solution to properly connect to the database (see step 9 in the preceding section [Database setup and configuration](#Database-setup-and-configuration))_
 1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
 1. from the root of the repo, run the command `npm start` to transpile the TypeScript to Javascript and start the app
 
